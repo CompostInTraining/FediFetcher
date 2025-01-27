@@ -1480,6 +1480,12 @@ if __name__ == "__main__":
             logger.critical(f"Config file {arguments.config} doesn't exist")
             sys.exit(1)
 
+    if(arguments.boto3_profile_name != None):
+        import watchtower
+        watchtowerHandler = watchtower.CloudWatchLogHandler(boto3_profile_name=arguments.boto3_profile_name)
+        watchtowerHandler.formatter.add_log_record_attrs = ["levelname", "process", "thread"]
+        logger.addHandler(watchtowerHandler)
+
     for envvar, value in os.environ.items():
         envvar = envvar.lower()
         if envvar.startswith("ff_") and not envvar.startswith("ff_access_token"):
